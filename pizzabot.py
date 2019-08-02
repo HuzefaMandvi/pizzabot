@@ -9,7 +9,7 @@ def is_request_valid(request):
     is_token_valid = request.form['token'] == os.environ['SLACK_VERIFICATION_TOKEN']
     return is_token_valid
 
-@app.route('/pizza-week', methods=['POST'])
+@app.route('/pizza-next', methods=['POST'])
 def pizza_week():
     if not is_request_valid(request):
         abort(400)
