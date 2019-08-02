@@ -1,5 +1,5 @@
 from __future__ import print_function
-import datetime
+from datetime import datetime
 import pickle
 import os.path
 from googleapiclient.discovery import build
@@ -9,7 +9,7 @@ from google.auth.transport.requests import Request
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
-def main():
+def get_pizza_date():
 
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
@@ -34,18 +34,19 @@ def main():
     service = build('calendar', 'v3', credentials=creds)
 
     # Call the Calendar API
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
+    now = datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    print('Getting the upcoming event')
     events_result = service.events().list(calendarId='izotope.com_ev0a47ltvauvo3dcfrovfraebc@group.calendar.google.com', timeMin=now,
-                                        maxResults=10, singleEvents=True,
+                                        maxResults=1, singleEvents=True,
                                         orderBy='startTime').execute()
     events = events_result.get('items', [])
 
     if not events:
         print('No upcoming events found.')
+        return False
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
-        print(start, event['summary'])
-
-if __name__ == '__main__':
-    main()
+        pizza_date = datetime.strptime(start[:-6], "%Y-%m-%dT%H:%M:%S")
+        print(start)
+        print(pizza_date)
+        return pizza_date
