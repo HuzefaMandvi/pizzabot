@@ -15,9 +15,16 @@ def pizza_week():
         abort(400)
 
     pizza_date = get_pizza_date()
-    now = datetime.now()
 
-    pizza_message = "The next pizza day is on " + pizza_date.strftime("%Y-%m-%d") + ". 'til then, keep it cheesy!"
+    if not pizza_date:
+        pizza_message = "Couldn't find the next pizza day...either @hmandviwala forgot to update the calendar, or the Pizzapocalypse is upon us. Either way, good luck and keep it cheesy!"
+    elif pizza_date:
+        pizza_date = pizza_date.strftime("%Y-%m-%d")
+        now = datetime.now().strftime("%Y-%m-%d")
+        if pizza_date == now:
+            pizza_message = "It is Pizza Wednesday my dudes!!"
+        else:
+            pizza_message = "The next pizza day is on " + pizza_date.strftime("%Y-%m-%d") + ". 'til then, keep it cheesy!"
 
     return jsonify(
         response_type='in_channel',
